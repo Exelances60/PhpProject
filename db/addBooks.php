@@ -8,8 +8,10 @@
         $ucret = $_POST['ucret'];
         $kategori = $_POST['kategori'];
         $randomİd = rand(1, 1000);
+        $stock = $_POST['stock'];
+        $details = $_POST['details'];
         $kitap = new Kitap("books");
-        $resposne = $kitap->kitapEkle($randomİd, $ad, $yazar, $yayinevi, $ucret, $kategori);
+        $resposne = $kitap->kitapEkle($randomİd, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock);
         if ($resposne) {
             header("Location: http://localhost/Demo/");
         } else {

@@ -15,15 +15,19 @@
     <div class="container mx-auto flex flex-col gap-14 ">
         <?php include "components/section.php"; ?>
         <?php include "components/maintable.php"; ?>
-        <div class="w-full border p-5 box-border" id="output">
-            <?php include "components/addBooksForm.php"; ?>
-
-
+        <div class="w-full p-5 border flex">
+            <div class="w-[50%]  p-5 box-border   " id="output">
+                <?php include "components/addBooksForm.php"; ?>
+            </div>
         </div>
-
-
-
     </div>
+
+
+
+
+
+
+
 
 
 

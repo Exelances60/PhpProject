@@ -12,7 +12,7 @@ $veriler = array(
     array(
         'ikon' => 'indigo',
         'baslik' => 'Kütüphanedeki Kitap Çeşitleri',
-        'icerik' => $kitap->calculateCategory("count"),
+        'icerik' => $kitap->calculateCategory(),
         'svg' => ' <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0 1 20.25 6v12A2.25 2.25 0 0 1 18 20.25H6A2.25 2.25 0 0 1 3.75 18V6A2.25 2.25 0 0 1 6 3.75h1.5m9 0h-9" />',
     ),
     array(
@@ -43,7 +43,6 @@ $veriler = array(
         </div>
         <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
             <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-
                 <?php foreach ($veriler as $veri) { ?>
                     <div class="relative pl-16">
                         <dt class="text-base font-semibold leading-7 text-gray-900">
