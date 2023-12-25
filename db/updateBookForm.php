@@ -8,7 +8,6 @@ $book = $kitap->getBook($bookId);
 
 
 
-
 ?>
 <div class="w-full p-5 box-border  flex items-center flex-col justify-center ">
 
@@ -70,6 +69,13 @@ $book = $kitap->getBook($bookId);
                 </label>
                 <input name="stock" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="number" placeholder="Kitap Hakkında Bilgi" value="<?php echo $book["stock"] ?>">
             </div>
+            <div class="w-full px-3 mb-6">
+                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+                    Resim URL Update
+                </label>
+                <input name="photoUrl" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Resim Url Update" value="<?php echo $book['photoUrl'] ?>">
+            </div>
+
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-3 rounded" type="submit">
                 Kitap Güncelle
             </button>

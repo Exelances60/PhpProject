@@ -11,15 +11,9 @@
 </head>
 
 <body>
-    <?php include 'components/header.php'; ?>
+    <?php include 'header.php'; ?>
     <div class="container mx-auto flex flex-col gap-14 ">
-        <?php include "components/section.php"; ?>
-        <?php include "components/maintable.php"; ?>
-        <div class="w-full p-5 border flex">
-            <div class="w-[50%]  p-5 box-border   " id="output">
-                <?php include "components/addBooksForm.php"; ?>
-            </div>
-        </div>
+        <?php include '../db/ProductPageRender.php'; ?>
     </div>
 
 
@@ -28,7 +22,7 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    </script>
+
 
 
 </body>

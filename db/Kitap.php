@@ -15,7 +15,7 @@ class Kitap
         $this->tablo = $booksTablo;
     }
 
-    public function kitapEkle($id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock)
+    public function kitapEkle($id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock, $photoUrl)
     {
         if ($this->baglanti) {
             @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
@@ -25,7 +25,7 @@ class Kitap
             if (mysqli_num_rows($allReadyExist) > 0) {
                 return false;
             } else {
-                $sorgu = mysqli_query($this->baglanti, "INSERT INTO $this->tablo (id, ad, yazar, yayınevi, ucret,kategori,details,stock) VALUES ('$id', '$ad', '$yazar', '$yayinevi', '$ucret','$kategori','$details','$stock')");
+                $sorgu = mysqli_query($this->baglanti, "INSERT INTO $this->tablo (id, ad, yazar, yayınevi, ucret,kategori,details,stock,photoUrl) VALUES ('$id', '$ad', '$yazar', '$yayinevi', '$ucret','$kategori','$details','$stock','$photoUrl')");
                 if ($sorgu) {
                     return true;
                 } else {
@@ -111,11 +111,28 @@ class Kitap
             return $response;
         }
     }
-    public function updateBook($id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock)
+    public function updateBook($id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock, $photoUrl)
     {
         if ($this->baglanti) {
             @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "UPDATE $this->tablo SET ad='$ad', yazar='$yazar', yayınevi='$yayinevi', ucret='$ucret', kategori='$kategori', details='$details', stock='$stock' WHERE id='$id'");
+            $sorgu = mysqli_query($this->baglanti, "UPDATE $this->tablo SET ad='$ad', yazar='$yazar', yayınevi='$yayinevi', ucret='$ucret', kategori='$kategori', details='$details', stock='$stock' , photoUrl='$photoUrl' WHERE id='$id'");
+            if ($sorgu) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    public function buyTheBooks($id)
+    {
+        if ($this->baglanti) {
+            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
+
+            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo WHERE id='$id'");
+            $response = mysqli_fetch_assoc($sorgu);
+            $stock = $response['stock'];
+            $stock = $stock - 1;
+            $sorgu = mysqli_query($this->baglanti, "UPDATE $this->tablo SET stock='$stock' WHERE id='$id'");
             if ($sorgu) {
                 return true;
             } else {

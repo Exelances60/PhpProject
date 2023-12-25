@@ -8,8 +8,19 @@ $kategori = $_POST['kategori'];
 $bookId = $_POST['id'];
 $details = $_POST['details'];
 $stock = $_POST['stock'];
+$photoUrl = $_POST['photoUrl'];
 $kitap = new Kitap("books");
-$resposne = $kitap->updateBook($bookId, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock);
+$resposne = $kitap->updateBook(
+    $bookId,
+    $ad,
+    $yazar,
+    $yayinevi,
+    $ucret,
+    $kategori,
+    $details,
+    $stock,
+    $photoUrl
+);
 
 
 if ($resposne) {
