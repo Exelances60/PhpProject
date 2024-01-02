@@ -18,126 +18,155 @@ class Kitap
     public function kitapEkle($id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock, $photoUrl)
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
+            try {
+                $checkIfExistsQuery = $this->baglanti->prepare("SELECT * FROM $this->tablo WHERE ad=? AND yazar=? AND yayınevi=?");
+                $checkIfExistsQuery->execute([$ad, $yazar, $yayinevi]);
 
-            $allReadyExist = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo WHERE ad='$ad' AND yazar='$yazar' AND yayınevi='$yayinevi' ");
-
-            if (mysqli_num_rows($allReadyExist) > 0) {
-                return false;
-            } else {
-                $sorgu = mysqli_query($this->baglanti, "INSERT INTO $this->tablo (id, ad, yazar, yayınevi, ucret,kategori,details,stock,photoUrl) VALUES ('$id', '$ad', '$yazar', '$yayinevi', '$ucret','$kategori','$details','$stock','$photoUrl')");
-                if ($sorgu) {
-                    return true;
+                if ($checkIfExistsQuery->rowCount() > 0) {
+                    return false;
                 } else {
-                    echo "Kayıt Başarısız";
+                    $insertQuery = $this->baglanti->prepare("INSERT INTO $this->tablo (id, ad, yazar, yayınevi, ucret, kategori, details, stock, photoUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $insertQuery->execute([$id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock, $photoUrl]);
+
+                    return true;
                 }
+            } catch (PDOException $e) {
+                echo "Kayıt Başarısız: " . $e->getMessage();
             }
         }
+
+        return false;
     }
 
     public function countBooks()
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo");
-            $count = mysqli_num_rows($sorgu);
+            try {
+                $query = $this->baglanti->query("SELECT COUNT(*) FROM $this->tablo");
+                $count = $query->fetchColumn();
 
-            return $count;
+                return $count;
+            } catch (PDOException $e) {
+                echo "İşlem Başarısız: " . $e->getMessage();
+            }
         }
+
+        return false;
     }
 
     public  function calculateAuthor()
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo");
-            $authors = array();
-            foreach ($sorgu as $satir) {
+            try {
+                $query = $this->baglanti->query("SELECT yazar FROM $this->tablo");
+                $authors = $query->fetchAll(PDO::FETCH_COLUMN);
 
-                if (!in_array($satir['yazar'], $authors)) {
-                    array_push($authors, $satir['yazar']);
-                }
+                $uniqueAuthors = array_unique($authors);
+                $authorCount = count($uniqueAuthors);
+                $printThreeAuthors = array_slice($uniqueAuthors, 0, 3);
+
+                return "<h1 class='font-bold'>$authorCount</h1>" . " Adet Yazar Bulunmaktadır bu yazarlar aşağıda listelenmiştir." . " <p class='text-sm'> Başlıca Yazarlar : " . implode(", ", $printThreeAuthors) . "</p>";
+            } catch (PDOException $e) {
+                echo "İşlem Başarısız: " . $e->getMessage();
             }
-            $authors = array_unique($authors);
-            $count = count($authors);
-            $printThreeAuthors = array_slice($authors, 0, 3);
-            return "<h1 class='font-bold'>" . $count . "</h1>" . " Adet Yazar Bulunmaktadır bu yazarlar aşağıda listelenmiştir." . " <p class='text-sm'> Başlıca Yazarlar : " . implode(", ", $printThreeAuthors) . "</p>";
         }
+
+        return false;
     }
 
     public function calculateCategory()
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo");
-            $categories = array();
-            foreach ($sorgu as $satir) {
+            try {
+                $query = $this->baglanti->query("SELECT kategori FROM $this->tablo");
+                $categories = $query->fetchAll(PDO::FETCH_COLUMN);
 
-                if (!in_array($satir['kategori'], $categories)) {
-                    array_push($categories, $satir['kategori']);
-                }
+                $uniqueCategories = array_unique($categories);
+                $categoryCount = count($uniqueCategories);
+                $printThreeCategories = array_slice($uniqueCategories, 0, 5);
+
+                return "<h1 class='font-bold'>$categoryCount</h1>" . " Adet Kategori Bulunmaktadır bu kategoriler aşağıda listelenmiştir." . " <p class='text-sm'> Başlıca Kategoriler : " . implode(", ", $printThreeCategories) . "</p>";
+            } catch (PDOException $e) {
+                echo "İşlem Başarısız: " . $e->getMessage();
             }
-            $categories = array_unique($categories);
-            $printThreeCategories = array_slice($categories, 0, 5);
-            return  "<h1 class='font-bold'>" . count($categories) . "</h1>" . " Adet Kategori Bulunmaktadır bu kategoriler aşağıda listelenmiştir." . " <p class='text-sm'> Başlıca Kategoriler : " . implode(", ", $printThreeCategories) . "</p>";
         }
+
+        return false;
     }
     public function getAllBooks()
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo");
-            return $sorgu;
+            try {
+                $query = $this->baglanti->query("SELECT * FROM $this->tablo");
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                echo "İşlem Başarısız: " . $e->getMessage();
+            }
         }
+
+        return false;
     }
     public function deleteBook($id)
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "DELETE FROM $this->tablo WHERE id='$id'");
-            if ($sorgu) {
-                return true;
-            } else {
-                return false;
+            try {
+                $deleteQuery = $this->baglanti->prepare("DELETE FROM $this->tablo WHERE id=?");
+                $deleteQuery->execute([$id]);
+
+                return $deleteQuery->rowCount() > 0;
+            } catch (PDOException $e) {
+                echo "Silme İşlemi Başarısız: " . $e->getMessage();
             }
         }
+
+        return false;
     }
     public function getBook($id)
     {
-        if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo WHERE id='$id'");
-            $response = mysqli_fetch_assoc($sorgu);
-            return $response;
-        }
+        $sorgu = $this->baglanti->query("SELECT * FROM $this->tablo WHERE id='$id'");
+        $response = $sorgu->fetch(PDO::FETCH_LAZY);
+        return $response;
     }
     public function updateBook($id, $ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock, $photoUrl)
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
-            $sorgu = mysqli_query($this->baglanti, "UPDATE $this->tablo SET ad='$ad', yazar='$yazar', yayınevi='$yayinevi', ucret='$ucret', kategori='$kategori', details='$details', stock='$stock' , photoUrl='$photoUrl' WHERE id='$id'");
-            if ($sorgu) {
+            try {
+                $sorgu = $this->baglanti->prepare("UPDATE $this->tablo SET ad=?, yazar=?, yayınevi=?, ucret=?, kategori=?, details=?, stock=?, photoUrl=? WHERE id=?");
+                $sorgu->execute([$ad, $yazar, $yayinevi, $ucret, $kategori, $details, $stock, $photoUrl, $id]);
+
                 return true;
-            } else {
-                return false;
+            } catch (PDOException $e) {
+                echo "Güncelleme Başarısız: " . $e->getMessage();
             }
         }
+
+        return false;
     }
     public function buyTheBooks($id)
     {
         if ($this->baglanti) {
-            @mysqli_select_db($this->baglanti, $this->veritabani) or die("Veritabanı Seçilemedi");
+            try {
+                $getBookQuery = $this->baglanti->prepare("SELECT * FROM $this->tablo WHERE id=?");
+                $getBookQuery->execute([$id]);
 
-            $sorgu = mysqli_query($this->baglanti, "SELECT * FROM $this->tablo WHERE id='$id'");
-            $response = mysqli_fetch_assoc($sorgu);
-            $stock = $response['stock'];
-            $stock = $stock - 1;
-            $sorgu = mysqli_query($this->baglanti, "UPDATE $this->tablo SET stock='$stock' WHERE id='$id'");
-            if ($sorgu) {
-                return true;
-            } else {
-                return false;
+                $response = $getBookQuery->fetch(PDO::FETCH_ASSOC);
+
+                if ($response) {
+                    $stock = $response['stock'];
+                    $stock = $stock - 1;
+
+                    $updateStockQuery = $this->baglanti->prepare("UPDATE $this->tablo SET stock=? WHERE id=?");
+                    $updateStockQuery->execute([$stock, $id]);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (PDOException $e) {
+                echo "İşlem Başarısız: " . $e->getMessage();
             }
         }
+
+        return false;
     }
 }
