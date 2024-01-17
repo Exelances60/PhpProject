@@ -1,3 +1,16 @@
+<?php
+$author = "Desing by enes";
+function sayac()
+{
+  static $sayi = 0;
+  global $author;
+  $sayi++;
+  echo $sayi . " " . $author;
+}
+
+
+?>
+
 <header class="bg-white">
   <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
     <div class="flex lg:flex-1">
@@ -6,6 +19,10 @@
         <img class="h-8 w-auto" src="https://w7.pngwing.com/pngs/776/145/png-transparent-books-illustration-book-book-rectangle-presentation-desktop-wallpaper-thumbnail.png" alt="Logo">
       </a>
     </div>
+    <?php
+    echo "<div class='mr-2'><p>Dosya Yolu</p>" . $_SERVER['DOCUMENT_ROOT'] . "<br></div>";
+
+    ?>
 
     <div class=" flex md:gap-5 gap-2">
       <div class="relative">
@@ -22,6 +39,9 @@
     </div>
     <div class="hidden sm:flex lg:flex-1 lg:justify-end">
       <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Giriş Yap <span aria-hidden="true">&rarr;</span></a>
+    </div>
+    <div>
+      <?php sayac() ?>
     </div>
   </nav>
 

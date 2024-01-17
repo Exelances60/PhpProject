@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 
+
+<!-- Uygulamamız kütüphanedeki kitapları tutulmasına saglar kitap ekleme silme güncelleme ve stocktan kitap alınınca stock adetinin azalmasına olanak saglar dosayların içinde sql dosyası var database için gerekli kodlar ordadır Hazırlayan : Enes Çelik 122444022  -->
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Selamün aleyküm</title>
+    <title>Kütüphane Sistemi</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="dist/output.css" rel="stylesheet">
